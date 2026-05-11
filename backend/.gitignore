@@ -1,0 +1,68 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+Thumbs.db.backup
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+
+# VS Code
+.vscode/
+.history/
+.ionide/
+
+# JetBrains (IntelliJ, WebStorm, PyCharm, etc.)
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Emacs & Vim
+*#
+.#*
+*.swp
+*.swo
+*.swn
+*.un~
+
+# Credentials and Environment
+.env
+.env.local
+.env.*.local
+secret.json
+keys/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Node/npm
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.so
+.pytest_cache/
+.tox/
+.coverage
+htmlcov/
+dist/
+build/

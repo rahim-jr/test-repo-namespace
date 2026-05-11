@@ -1,0 +1,54 @@
+=== PRODUCT API TEST DATA ===
+
+Base URL: http://localhost:5000/api
+
+---
+
+1. CREATE PRODUCT
+   POST http://localhost:5000/api/products
+
+   {
+     "productName": "Wireless Mouse",
+     "description": "Ergonomic wireless mouse with USB receiver",
+     "price": 1499,
+     "imageURL": "https://example.com/mouse.jpg"
+   }
+
+   {
+     "productName": "Mechanical Keyboard",
+     "description": "RGB mechanical keyboard with blue switches",
+     "price": 3499,
+     "imageURL": "https://example.com/keyboard.jpg"
+   }
+
+   {
+     "productName": "USB-C Hub",
+     "description": "7-in-1 USB-C hub with HDMI and SD card reader",
+     "price": 2499,
+     "imageURL": "https://example.com/hub.jpg"
+   }
+
+---
+
+2. GET ALL PRODUCTS
+   GET http://localhost:5000/api/
+
+---
+
+3. GET PRODUCT BY ID
+   GET http://localhost:5000/api/REPLACE_WITH_ACTUAL_ID
+
+---
+
+4. UPDATE PRODUCT
+   PUT http://localhost:5000/api/REPLACE_WITH_ACTUAL_ID
+
+   {
+     "price": 1299,
+     "description": "Updated description for the product"
+   }
+
+---
+
+5. DELETE PRODUCT
+   DELETE http://localhost:5000/api/REPLACE_WITH_ACTUAL_ID
