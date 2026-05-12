@@ -1,0 +1,220 @@
+=== BACKEND API TEST DATA (AUTH + PRODUCT CRUD) ===
+
+Base URL: http://localhost:5000/api
+
+Notes:
+- The backend exposes authentication endpoints under `/api/auth`.
+- Creating, updating, and deleting products require a valid JWT in the `Authorization` header: `Authorization: Bearer <TOKEN>`.
+- Replace `REPLACE_WITH_ACTUAL_ID` with the real product _id returned by the create product response.
+
+---
+
+AUTHENTICATION
+--------------
+
+1. REGISTER
+   POST http://localhost:5000/api/auth/register
+
+   Request body (JSON):
+   {
+     "name": "Test User",
+     "email": "test@example.com",
+     "password": "TestPass123!"
+   }
+
+   Expected response:
+   {
+     "success": true,
+     "token": "<JWT_TOKEN>",
+     "user": { "_id": "...", "name": "Test User", "email": "test@example.com" }
+   }
+
+2. LOGIN
+   POST http://localhost:5000/api/auth/login
+
+   Request body (JSON):
+   {
+     "email": "test@example.com",
+     "password": "TestPass123!"
+   }
+
+   Expected response:
+   {
+     "success": true,
+     "token": "<JWT_TOKEN>",
+     "user": { "_id": "...", "name": "Test User", "email": "test@example.com" }
+   }
+
+3. GET CURRENT USER (protected)
+   GET http://localhost:5000/api/auth/me
+
+   Headers:
+     Authorization: Bearer <JWT_TOKEN>
+
+   Request body: (none)
+
+   Expected response:
+   {
+     "success": true,
+     "user": { "_id": "...", "name": "Test User", "email": "test@example.com", "createdAt": "..." }
+   }
+
+---
+
+PRODUCT API (uses same Base URL)
+-------------------------------
+
+1. CREATE PRODUCT (protected)
+   POST http://localhost:5000/api/products
+
+   Headers:
+     Content-Type: application/json
+     Authorization: Bearer <JWT_TOKEN>
+
+   Example request bodies (send one at a time):
+
+   {
+     "productName": "Wireless Mouse",
+     "description": "Ergonomic wireless mouse with USB receiver",
+     "price": 1499,
+     "imageURL": "https://example.com/mouse.jpg"
+   }
+
+   {
+     "productName": "Mechanical Keyboard",
+     "description": "RGB mechanical keyboard with blue switches",
+     "price": 3499,
+     "imageURL": "https://example.com/keyboard.jpg"
+   }
+
+   {
+     "productName": "USB-C Hub",
+     "description": "7-in-1 USB-C hub with HDMI and SD card reader",
+     "price": 2499,
+     "imageURL": "https://example.com/hub.jpg"
+   }
+
+   Expected response (example):
+   {
+     "success": true,
+     "data": {
+       "_id": "608d1b2f5f1b2c001234abcd",
+       "productName": "Wireless Mouse",
+       "description": "Ergonomic wireless mouse with USB receiver",
+       "price": 1499,
+       "imageURL": "https://example.com/mouse.jpg",
+       "createdAt": "...",
+       "updatedAt": "..."
+     }
+   }
+
+---
+
+2. GET ALL PRODUCTS (public)
+   GET http://localhost:5000/api/
+
+   Request body: (none)
+
+   Expected response:
+   [
+     {
+       "_id": "608d1b2f5f1b2c001234abcd",
+       "productName": "Wireless Mouse",
+       "description": "Ergonomic wireless mouse with USB receiver",
+       "price": 1499,
+       "imageURL": "https://example.com/mouse.jpg",
+       "createdAt": "...",
+       "updatedAt": "..."
+     },
+     {
+       "_id": "608d1b2f5f1b2c001234abce",
+       "productName": "Mechanical Keyboard",
+       "description": "RGB mechanical keyboard with blue switches",
+       "price": 3499,
+       "imageURL": "https://example.com/keyboard.jpg",
+       "createdAt": "...",
+       "updatedAt": "..."
+     }
+   ]
+
+---
+
+3. GET PRODUCT BY ID (public)
+   GET http://localhost:5000/api/REPLACE_WITH_ACTUAL_ID
+
+   Request body: (none)
+
+   Expected response:
+   {
+     "_id": "608d1b2f5f1b2c001234abcd",
+     "productName": "Wireless Mouse",
+     "description": "Ergonomic wireless mouse with USB receiver",
+     "price": 1499,
+     "imageURL": "https://example.com/mouse.jpg",
+     "createdAt": "...",
+     "updatedAt": "..."
+   }
+
+---
+
+4. UPDATE PRODUCT (protected)
+   PUT http://localhost:5000/api/REPLACE_WITH_ACTUAL_ID
+
+   Headers:
+     Content-Type: application/json
+     Authorization: Bearer <JWT_TOKEN>
+
+   Request body (partial update):
+   {
+     "price": 1299,
+     "description": "Updated description for the product"
+   }
+
+   Expected response (example):
+   {
+     "_id": "608d1b2f5f1b2c001234abcd",
+     "productName": "Wireless Mouse",
+     "description": "Updated description for the product",
+     "price": 1299,
+     "imageURL": "https://example.com/mouse.jpg",
+     "createdAt": "...",
+     "updatedAt": "..."
+   }
+
+---
+
+5. DELETE PRODUCT (protected)
+   DELETE http://localhost:5000/api/REPLACE_WITH_ACTUAL_ID
+
+   Headers:
+     Authorization: Bearer <JWT_TOKEN>
+
+   Request body: (none)
+
+   Expected response:
+   {
+     "message": "Product deleted successfully"
+   }
+
+---
+
+QUICK TEST SEQUENCE (brief)
+---------------------------
+1) Register or login to get a token.
+2) Use the token to create products.
+3) Retrieve the list with GET /.
+4) Use GET /:id, PUT /:id, DELETE /:id as needed.
+
+REPLACEMENTS
+------------
+- Replace `<JWT_TOKEN>` with the actual token returned on login/register.
+- Replace `REPLACE_WITH_ACTUAL_ID` with the product `_id` returned from create responses.
+
+NOTES
+-----
+- If you change the product model to include `user` (owner), created products will be associated with the authenticated user and update/delete will only succeed for the owner.
+- For automated tests / CI, you can generate a user and record the token programmatically, then run the product CRUD calls with that token.
+
+---
+
+End of test data

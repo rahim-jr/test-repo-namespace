@@ -1,0 +1,170 @@
+{
+  "info": {
+    "name": "product",
+    "description": null,
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "register user",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "auth": {
+          "type": "noauth"
+        },
+        "description": "",
+        "url": {
+          "raw": "http://localhost:5000/api/auth/register",
+          "protocol": "http",
+          "host": [
+            "localhost:5000"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "register"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Test User\",\n  \"email\": \"test1@example.com\",\n  \"password\": \"TestPass1223!\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "login",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "auth": {
+          "type": "noauth"
+        },
+        "description": "",
+        "url": {
+          "raw": "http://localhost:5000/api/auth/login",
+          "protocol": "http",
+          "host": [
+            "localhost:5000"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "login"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"TestPass123!\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "GET CURRENT USER (protected)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "auth": {
+          "type": "bearer",
+          "bearer": {
+            "key": "token",
+            "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhMDJlMTNiMDAxMDYxZmZhOTIxZGIzNyIsImlhdCI6MTc3ODU3NDYwNiwiZXhwIjoxNzc5MTc5NDA2fQ.5R_ToAz3s7jc9yIUh5-btYVy5lGmLNa2JfLd1wHhUqU",
+            "type": "string"
+          }
+        },
+        "description": "",
+        "url": {
+          "raw": "http://localhost:5000/api/auth/me",
+          "protocol": "http",
+          "host": [
+            "localhost:5000"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "me"
+          ],
+          "query": [],
+          "variable": []
+        }
+      }
+    },
+    {
+      "name": "CREATE PRODUCT (protected)",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "auth": {
+          "type": "bearer",
+          "bearer": {
+            "key": "token",
+            "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhMDJlMTNiMDAxMDYxZmZhOTIxZGIzNyIsImlhdCI6MTc3ODU3NDYwNiwiZXhwIjoxNzc5MTc5NDA2fQ.5R_ToAz3s7jc9yIUh5-btYVy5lGmLNa2JfLd1wHhUqU",
+            "type": "string"
+          }
+        },
+        "description": "",
+        "url": {
+          "raw": "http://localhost:5000/api/products",
+          "protocol": "http",
+          "host": [
+            "localhost:5000"
+          ],
+          "path": [
+            "api",
+            "products"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "   {\n     \"productName\": \"Wireless Mouse two\",\n     \"description\": \"Ergonomic wireless mouse with USB receiver\",\n     \"price\": 1499,\n     \"imageURL\": \"https://imgs.search.brave.com/wGjOABYrHhHmj3xNAhD5PmtmHGbO8TD1gylnvr7x014/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly93d3cu/aW5jYXNlLmNvbS9j/ZG4vc2hvcC9maWxl/cy9LVEYtMDAwMTMt/TW9kZXJuLU1vYmls/ZS1Nb3VzZS1CbGFj/ay5qcGc_dj0xNzYx/Nzk0Mjc5JndpZHRo/PTIwNDg\"\n   }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Get all products",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "auth": {
+          "type": "noauth"
+        },
+        "description": "",
+        "url": {
+          "raw": "http://localhost:5000/api/",
+          "protocol": "http",
+          "host": [
+            "localhost:5000"
+          ],
+          "path": [
+            "api",
+            ""
+          ],
+          "query": [],
+          "variable": []
+        }
+      }
+    }
+  ],
+  "variable": []
+}

@@ -3,17 +3,22 @@ import bcrypt from "bcryptjs";
 
 const userSchema = new mongoose.Schema(
   {
-    name: String,
-    email: String,
-    Password: String,
-
-    createdAt: {
-      type: Date,
-      default: Date.now,
+    name: {
+      type: String,
+      required: true,
+      trim: true,
     },
-    updatedAt: {
-      type: Date,
-      default: Date.now,
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
+    },
+    password: {
+      type: String,
+      required: true,
+      select: false,
     },
   },
   {
@@ -23,11 +28,10 @@ const userSchema = new mongoose.Schema(
 
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
-    next();
+    return next();
   }
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
-  this.updatedAt = Date.now();
 });
 
 userSchema.methods.matchPassword = async function (enteredPassword) {
@@ -35,4 +39,3 @@ userSchema.methods.matchPassword = async function (enteredPassword) {
 };
 
 export default mongoose.model("User", userSchema);
-// export default User;

@@ -1,30 +1,30 @@
 import jwt from "jsonwebtoken";
-
-const jwt = require("jsonwebtoken");
+import User from "../models/user.model.js";
 
 const generateToken = (id) => {
-  // 1. Critical safety check
   if (!process.env.JWT_SECRET) {
     throw new Error("JWT_SECRET is missing from environment variables");
   }
 
-  // 2. Explicit configuration options
-  const options = {
+  return jwt.sign({ id: String(id) }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRE || "7d",
-    algorithm: "HS256", // Forces secure HMAC SHA256 hashing
-  };
-
-  // 3. Structured payload execution
-  return jwt.sign({ id: String(id) }, process.env.JWT_SECRET, options);
+    algorithm: "HS256",
+  });
 };
 
 export const register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
-    const existingUser = await User.findone({ email });
+    if (!name || !email || !password) {
+      return res.status(400).json({
+        message: "name, email and password are required",
+      });
+    }
+
+    const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ message: "User already exist" });
+      return res.status(400).json({ message: "User already exists" });
     }
 
     const user = await User.create({
@@ -36,30 +36,12 @@ export const register = async (req, res) => {
     const token = generateToken(user._id);
 
     res.status(201).json({
-      sucess: true,
+      success: true,
       token,
       user: {
         _id: user._id,
         name: user.name,
         email: user.email,
-      },
-    });
-  } catch (error) {
-    res.status(500).json({ message: "error.message" });
-  }
-};
-
-export const getMe = async (req, res) => {
-  try {
-    const user = await User.findById(req.user._id);
-
-    res.json({
-      success: true,
-      user: {
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        createdAt: user.createdAt,
       },
     });
   } catch (error) {
@@ -69,29 +51,29 @@ export const getMe = async (req, res) => {
 
 export const login = async (req, res) => {
   try {
-    const { email, passoword } = req.body;
+    const { email, password } = req.body;
 
-    //safety check
     if (!email || !password) {
-      return res.status(400).json({ message: "Provide Email and password!" });
+      return res.status(400).json({
+        message: "Provide email and password",
+      });
     }
 
-    const User = await User.findOne({ email }.select(+password));
+    const user = await User.findOne({ email }).select("+password");
 
-    if (!User) {
-      return res.status(400).json({ message: "Invalid Credentials" });
+    if (!user) {
+      return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    const isMatch = await user.matchPassword(passoword);
-
+    const isMatch = await user.matchPassword(password);
     if (!isMatch) {
-      return res.satus(400).json({ message: "Invalid Credentials" });
+      return res.status(401).json({ message: "Invalid credentials" });
     }
 
     const token = generateToken(user._id);
 
     res.json({
-      sucess: true,
+      success: true,
       token,
       user: {
         _id: user._id,
@@ -102,6 +84,11 @@ export const login = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
+};
+
+export const logout = async (req, res) => {
+  res.clearCookie("token");
+  res.json({ message: "Logged out successfully" });
 };
 
 export const getUserProfile = async (req, res) => {
@@ -117,7 +104,28 @@ export const getUserProfile = async (req, res) => {
       user: {
         _id: user._id,
         name: user.name,
+        email: user.email,
         createdAt: user.createdAt,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const getMe = async (req, res) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({ message: "Not authenticated" });
+    }
+
+    res.json({
+      success: true,
+      user: {
+        _id: req.user._id,
+        name: req.user.name,
+        email: req.user.email,
+        createdAt: req.user.createdAt,
       },
     });
   } catch (error) {
