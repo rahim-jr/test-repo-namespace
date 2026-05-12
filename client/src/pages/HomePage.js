@@ -36,20 +36,24 @@
 
 // export default HomePage;
 
-import React, { useState, useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import ProductList from "../components/ProductList";
-import AddEditProduct from "../components/AddEditProduct"; // Import the AddEditProduct component
+import AddEditProduct from "../components/AddEditProduct";
 import {
   getAllProducts,
   createProduct,
   updateProduct,
   deleteProduct,
-} from "../services/api"; // Import your CRUD functions
+} from "../services/api";
+import AuthContext from "../context/AuthContext.js";
+import { useNavigate } from "react-router-dom";
 import "../styles/HomePage.css";
 
 function HomePage() {
   const [products, setProducts] = useState([]);
   const [editingProduct, setEditingProduct] = useState(null);
+  const { logout, user } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchProducts();
@@ -95,9 +99,22 @@ function HomePage() {
     }
   };
 
+  const handleLogout = () => {
+    logout();
+    navigate("/login", { replace: true });
+  };
+
   return (
     <div className="home-page">
-      <h1>Product Management</h1>
+      <div className="page-header">
+        <div>
+          <h1>Product Management</h1>
+          {user && <p className="welcome-text">Welcome, {user.name}</p>}
+        </div>
+        <button className="logout-button" onClick={handleLogout}>
+          Logout
+        </button>
+      </div>
       <AddEditProduct
         product={editingProduct}
         onSave={handleSave}

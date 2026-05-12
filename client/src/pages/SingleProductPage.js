@@ -1,11 +1,14 @@
-import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import React, { useContext, useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { getProductById } from "../services/api";
+import AuthContext from "../context/AuthContext.js";
 import "../styles/SingleProductPage.css";
 
 function SingleProductPage() {
   const { productId } = useParams();
   const [product, setProduct] = useState(null);
+  const { logout } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchProduct(productId);
@@ -20,12 +23,22 @@ function SingleProductPage() {
     }
   };
 
+  const handleLogout = () => {
+    logout();
+    navigate("/login", { replace: true });
+  };
+
   if (!product) {
     return <div>Loading...</div>;
   }
 
   return (
     <div className="single-product-page">
+      <div className="product-page-header">
+        <button className="logout-button" onClick={handleLogout}>
+          Logout
+        </button>
+      </div>
       <div className="product-image">
         <img src={product.imageURL} alt={product.productName} />
       </div>

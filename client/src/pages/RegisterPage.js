@@ -1,30 +1,42 @@
-import React, { useState, useContext } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import React, { useContext, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import AuthContext from "../context/AuthContext.js";
-import "../styles/LoginPage.css";
+import "../styles/RegisterPage.css";
 
-const LoginPage = () => {
+const RegisterPage = () => {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { login } = useContext(AuthContext);
+  const { register } = useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      await login(email, password);
+      await register(name, email, password);
       navigate(from, { replace: true });
     } catch (err) {
       console.error(err);
-      alert(err.response?.data?.message || "Login failed");
+      alert(err.response?.data?.message || "Registration failed");
     }
   };
 
   return (
-    <div className="login-container">
-      <form className="login-form" onSubmit={handleSubmit}>
+    <div className="register-container">
+      <form className="register-form" onSubmit={handleSubmit}>
+        <h2>Create account</h2>
+        <div>
+          <label>Name</label>
+          <input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            type="text"
+            required
+          />
+        </div>
         <div>
           <label>Email</label>
           <input
@@ -43,14 +55,13 @@ const LoginPage = () => {
             required
           />
         </div>
-        <button type="submit">Login</button>
-
+        <button type="submit">Register</button>
         <p className="auth-switch-link">
-          Don't have an account? <Link to="/register">Register here</Link>
+          Already have an account? <Link to="/login">Login here</Link>
         </p>
       </form>
     </div>
   );
 };
 
-export default LoginPage;
+export default RegisterPage;
